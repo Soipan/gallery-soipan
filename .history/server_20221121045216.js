@@ -13,7 +13,7 @@ const app = express();
 
 // connecting the database
 
-const MONGODB_URI = "mongodb+srv://soipan:L4q3G4sprXQdi3Zf@project1.mszv13b.mongodb.net/?retryWrites=true"
+const MONGODB_URI = 'mongodb+srv://soipan:L4q3G4sprXQdi3Zf@project1.mszv13b.mongodb.net/?retryWrites=true'
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true  },(err)=>{
     if (err) {
         console.log(err)
