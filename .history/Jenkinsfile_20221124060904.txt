@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+
+  tools {
+      nodejs "node"
+    }
+    
+  stages {
+        
+    stage('Clone Git repo') {
+      steps {
+        git 'https://github.com/Soipan/gallery-soipan.git'
+      }
+     }
+    
+        stage('Project Build') {
+      steps {
+        sh 'npm install'
+        }
+     }  
+     
+           stage('Project Test') {
+      steps {
+       echo "Still trying to figure out sh 'npm test'"
+       }
+     } 
+     
+        stage('Deploy to Heroku') {
+            steps {
+                echo 'Deploying to Heroku'
+                withCredentials([usernameColonPassword(credentialsId: 'heroku', variable: 'HEROKU_CREDENTIALS' )])
+                {
+                    sh 'git push https://${HEROKU_CREDENTIALS}@git.heroku.com/rocky-lake-68759.git'
+                }
+            }
+        }
+ 
+     
+    }
+     
+     post('Notification to Slack') {
+         failure{
+             emailext attachLog: true, body: 'The process is working but not yet there !', subject: 'Message from Jenkins', to: 'soipansxifty@gmail.com'
+         }
+     
+         success{
+             slackSend color: "good", message: "This is the Build Number - ${env.BUILD_NUMBER} & This is the Heroku link - https://rocky-lake-68759.herokuapp.com/"
+         }
+         
+        }
+     
+    }
